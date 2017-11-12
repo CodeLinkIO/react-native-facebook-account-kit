@@ -1,6 +1,5 @@
 package io.underscope.react.fbak;
 
-import android.app.Activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,7 +17,6 @@ import com.facebook.accountkit.PhoneNumber;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
-import com.facebook.react.bridge.ActivityEventListener;
 import com.facebook.react.bridge.Arguments;
 import com.facebook.react.bridge.Promise;
 import com.facebook.react.bridge.ReactApplicationContext;
@@ -31,7 +29,10 @@ import com.facebook.react.bridge.WritableMap;
 import java.util.ArrayList;
 import java.util.List;
 
-public class RNAccountKitModule extends ReactContextBaseJavaModule implements ActivityEventListener {
+import host.exp.exponent.ActivityResultListener;
+import host.exp.expoview.Exponent;
+
+public class RNAccountKitModule extends ReactContextBaseJavaModule implements ActivityResultListener {
 
     private ReactApplicationContext reactContext;
     private Promise pendingPromise;
@@ -44,8 +45,7 @@ public class RNAccountKitModule extends ReactContextBaseJavaModule implements Ac
         super(reactContext);
 
         this.reactContext = reactContext;
-        this.reactContext.addActivityEventListener(this);
-
+        Exponent.getInstance().addActivityResultListener(this);
 
         AccountKit.initialize(reactContext.getApplicationContext());
     }
@@ -61,7 +61,7 @@ public class RNAccountKitModule extends ReactContextBaseJavaModule implements Ac
      */
 
     @Override
-    public void onActivityResult(Activity activity, int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == APP_REQUEST_CODE) {
             if (data == null) {
                 rejectPromise("error", new Error("Login failed"));
@@ -86,7 +86,6 @@ public class RNAccountKitModule extends ReactContextBaseJavaModule implements Ac
             }
         }
     }
-
 
 
     /**
@@ -301,3 +300,4 @@ public class RNAccountKitModule extends ReactContextBaseJavaModule implements Ac
     public void onNewIntent(Intent intent) {
     }
 }
+

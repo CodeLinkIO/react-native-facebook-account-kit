@@ -18,11 +18,24 @@ android {
     }
 }
 
+// @TODO (khacanh) Not sure why this requires fabric
+repositories{
+    flatDir{
+        dirs 'libs'
+    }
+    mavenLocal()
+    maven { url 'https://maven.fabric.io/public' }
+}
+
 dependencies {
     compile 'com.facebook.react:react-native:+'
     compile ('com.facebook.android:account-kit-sdk:4.23.0'){
         exclude group: 'com.parse.bolts', module: 'bolts-android';
         exclude group: 'com.parse.bolts', module: 'bolts-applinks';
         exclude group: 'com.parse.bolts', module: 'bolts-tasks';
+    }
+    compile('host.exp.exponent:expoview:21.0.0') {
+        exclude group: 'io.nlopez.smartlocation', module: 'library'
+        transitive = true;
     }
 }
